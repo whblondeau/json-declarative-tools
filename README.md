@@ -14,12 +14,16 @@ Which brings us to `json-declarative-tools`.
 
 ## Design Overview
 
-Since attempts to imitate the XML technologies have failed for reasons probably impossible to overcome, `json-declarative-tools` will be built from the ground up. Unusually, it will provide two parallel implementations: a **Python reference implementation** (for rigor and clarity) and a **JavaScript working implementation** for clientside and NodeJS programming.
+Since attempts to imitate the XML technologies have failed for reasons probably impossible to overcome, `json-declarative-tools` will be built from the ground up. Unusually, it will provide two parallel implementations: a **Python reference implementation** (for rigor and clarity) which is usable in CLI scripting and serverside Flask/DJango development; and a **JavaScript working implementation** for clientside and NodeJS programming.
 
 ### Principles
-`json-declarative-tools` will not attempt to closely mimic the implementation of the XML toolsets.
+`json-declarative-tools` will **not attempt to closely mimic** the implementation of the XML toolsets.
 
-`json-declarative-tools` will attempt to reproduce a modest subset of the _benefits_ of the XML toolsets, in a way that is accessible to JavaScript developers.
+`json-declarative-tools` will attempt to **reproduce a modest subset of the _benefits_** of the XML toolsets, in a way that is accessible to JavaScript developers.
+
+`json-declarative-tools` will provide **no affordances for incorporated imperative programming.** 
+
+`json-declarative-tools` will define **minimal, language-independent notation** as necessary. 
 
 To that end, **`json-declarative-tools` consists of the following parts:**
 
@@ -30,8 +34,9 @@ To that end, **`json-declarative-tools` consists of the following parts:**
   - **JSNTemplate**, an extremely simple templating language that defines an **output composed of:**
     - **nodes** drawn from an input JSON instance
     - simple **declarative expressions** that can access those nodes
-    - **string literals** (HTML, Markdown, CSS plain text etc)
+    - **string literals** (HTML, Markdown, CSS, plain text etc)
     - **parameters** passed at runtime
+    
     JSNTemplate will be as simple and user-friendly as possible, providing affordances for aliasing JSNPath expressions using a simple notation.
 
 
