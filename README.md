@@ -16,6 +16,14 @@ Which brings us to `json-declarative-tools`.
 
 Since attempts to imitate the XML technologies have failed for reasons probably impossible to overcome, `json-declarative-tools` will be built from the ground up. Unusually, it will provide two parallel implementations: a **Python reference implementation** (for rigor and clarity) which is usable in CLI scripting and serverside Flask/DJango development; and a **JavaScript working implementation** for clientside and NodeJS programming.
 
+Besides their obvious merits for the task, Javascript and Python share a peculiar distinction:
+
+    _JSON syntax is valid Javascript. It is also valid Python._
+
+In other words, a JSON string is an `expression`, which can be directly evaluated, in both languages. Most languages need to parse a JSON string in order to obtain the corresponding datastructure.
+
+Yes, direct evaluation, as opposed to parsing, of unknown strings can be dangerous. But `json-declarative-tools` will not concern itself with the problems of sanitizing input. That, Dear Reader, is on you.
+
 ### Principles
 `json-declarative-tools` will **not attempt to closely mimic** the implementation of the XML toolsets.
 
@@ -39,4 +47,34 @@ To that end, **`json-declarative-tools` consists of the following parts:**
     
     JSNTemplate will be as simple and user-friendly as possible, providing affordances for aliasing JSNPath expressions using a simple notation.
 
+### How does `json-declarative-tools` differ from the XML toolsets?
+
+  - **No Namespaces.** This is pretty obvious, since JSON doesn't support namespaces in the first place. But it's a hopeful sign. About 94% of the time, when somebody can't work out why their XPath expression isn't getting the correct results, or their XSLT isn't bringing the right information across, when _It's right there, goddammit_, the blame for the confusion goes to namespaces. Not going to re-litigate the considerable merits of namespaces right now, but as a practitioner and would-be evangelist, it's probably the biggest obstacle to XML tools' adoption I've seen.
+
+  - **Restricted Capabilities.** Almost all of the XML tools suffered grievously from the academic compulsion to provide a sound and logically complete solution. Unfortunately, _the cost of getting to 100% is never linear._ That last 20% takes twice as long, and generates twice as many problems, as the first 80%.
+
+  So, JSNPath will not offer the stunning array of selectors and facets that XPath does. JSNSchema and JSNTemplate will restrict themselves to a modest and immediately useful set of goals.
+
+  - **Syntactic Clarity at all times.** To me, XML and the XML tools were quite reasonable. But I was one of those people who could sight-read XML Schema, so my view of the technologies was warped going in. I eventually found out that I was a useful but really rather unwelcome weirdo in a world full of people who got all kinds of strident butt-hurt when someone needed them to close a tag. So, the design constraint here is that `json-declarative-tools` is going to put a lot of work into being:
+
+    - visually simple,
+
+    - cognitively accessible,
+
+    - resistant to casual error;
+
+  As much as JSON's origins will permit.
+
+
+### "Declarative". WTF?
+
+Not giving this up. It works too damn well.
+
+The secret about declarative programming is: it takes about as long as imperative programming, but there's no real bug list. Just some reminders about things you forgot to specify.
+
+This is some kind of astonishing difference. Leave the bugs for the poor C programmers who wrote your interpreters and/or compilers to tussle with. Seriously: they like to.
+
+`json-declarative-tools` is immensely easier to use than, say, `json-whateverdude-tools` could be. All of the affordances in this toolkit will be declarative. Pure functional or whatever. (This, btw, comes from XSLT, which was a heavily disguised dialect of Lisp.)
+
+You're welcome.
 
