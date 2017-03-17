@@ -2,7 +2,22 @@
 
 This specification tries to strike a helpful balance between the immense utility, power, and  apparently forbidding complexity of XPath on the one hand, and the familiarity of JSON notation on the other. The end result, of course, is neither as powerful as XPath nor as immediately familiar as Javascript's Object and Array syntax, or Python's corresponding Dictionary and List.
 
+----
+### JSNPath is different from XPath
+
+There is no way JSNPath is ever going to have the same analytical or expressive power as XPath. That's a feature, not a bug: as good as XPath is, it became pretty heavyweight. Capabilities, features, and syntax of JSNPath will be chosen based on the following criteria:
+
+  - Is this feature genuinely useful in real-world cases?
+  
+  - Is the syntax for its implementation cognitively clear? Nonconfusing? Salient? Idiomatic-ish?
+  
+  - Is it possible to implement without `[**]['Hell']`?
+
+So no, your favoritest XPath thing ever isn't gonna get implemented. If JSNPath is a 70% or even 60% solution, and usable, it'll be a thumping success.
+
 Hopefully, it's at least big and dumb and obvious.
+
+----
 
 ### JSNPath Examples
 
@@ -10,7 +25,7 @@ Hopefully, it's at least big and dumb and obvious.
                                             "stores" top-level node, whose name ends
                                             in "parrot"
 
-`['stores'][**]['inventory'][*]`            get any the child nodes of any "inventory"   
+`['stores'][**]['inventory'][*]`            get any child nodes of any "inventory"   
                                             descendants of the "stores" top-level node
 
 `['student'](['first_name'] == 'Ann')[*]`   get the enture contents of every "student"
@@ -51,10 +66,14 @@ Hopefully, it's at least big and dumb and obvious.
                                             in the "album" top-level object
 
 `['album']['tracks'][2:7][*]`               get the third through seventh node from the  
-                                            "tracks"array in the "album" top-level object
+                                            "tracks" array in the "album" top-level object
 
 `['album']['tracks'][3, 5, 8][*]`           get the fourth, sixth, and ninth nodes from the  
-                                            "tracks"array in the "album" top-level object
+                                            "tracks" array in the "album" top-level object
+
+`['album']['tracks'][1:-1][*]`              get all nodes _except_ the first and last from
+                                            the "tracks" array in the "album" top-level
+                                            object
 
 `[*]`                                       get all top-level nodes of a JSON object
 
@@ -62,11 +81,13 @@ Hopefully, it's at least big and dumb and obvious.
 
 #### Things the examples show
 
-JSNPaths are composed of square-bracketed **steps**. Each step represents traversal down into the JSON object. Typically, this is a direct traversal to a child object. The special shortcut operator `[**]` is the only exception to this.
+JSNPaths are composed of square-bracketed **steps**. Each step represents traversal down into the JSON object. Typically, this is a direct traversal to a child node. (The special descent shortcut expression `[**]` is the only exception to this.)
 
-When the square brackets contain a string, that's the name of a node. The name can be exact, or  it can be a glob expression.
+**`namexpr` name expressions:**
 
-**`indexpr` indexing:**
+When the square brackets contain a string, that's the name of a node. The name can be exact, or it can be a glob expression.
+
+**`indexpr` index expressions:**
 
 When the square brackets contain a number, that's the index of the node in its parent array.
 
@@ -115,6 +136,9 @@ JSNPath returns a very specific data structure for each node it finds. This is a
 `[<explicit path>, <node value>]`
 
 where the explicit path includes the node's name (if the parent is an object) or index (if the parent is an array.)
+
+
+----
 
 So, here's how it works.
 
