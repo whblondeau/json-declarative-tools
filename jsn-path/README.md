@@ -15,7 +15,7 @@ Hopefully, it's at least big and dumb and obvious.
 
 `['student'](['first_name'] == 'Ann')[*]`   get the enture contents of every "student"
                                             record where the record's "first_name"
-                                            property has a value of "Angela"
+                                            property has a value of "Ann"
 
 `[0]`                                       get the first top-level element of a JSON
                                             array object
@@ -62,7 +62,7 @@ Hopefully, it's at least big and dumb and obvious.
 
 #### Things the examples show
 
-JSNPaths are composed of square-bracketed steps.
+JSNPaths are composed of square-bracketed **steps**. Each step represents traversal down into the JSON object. Typically, this is a direct traversal to a child object. The special shortcut operator `[**]` is the only exception to this.
 
 When the square brackets contain a string, that's the name of a node. The name can be exact, or  it can be a glob expression.
 
@@ -110,7 +110,7 @@ When the square brackets contain a number, that's the index of the node in its p
 
 #### Return value "retexpr"
 
-JSNPath returns a very specific data structure for each node it finds:
+JSNPath returns a very specific data structure for each node it finds. This is an array representing a 2-tuple:
 
 `[<explicit path>, <node value>]`
 
