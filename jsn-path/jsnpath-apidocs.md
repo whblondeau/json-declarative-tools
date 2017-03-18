@@ -32,7 +32,8 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
 
 #### Terminology
 
-**`container`:** a JSON value of object or array type; "container type" refers to those two types. The complementary term **`non-container`** identifies all other JSON values (string, number, boolean, the various null/None signifiers).
+**`container`:** a JSON value of object or array type; "container type" refers to those two types. The complementary term 
+**`non-container`** identifies all other JSON values (string, number, boolean, the various null/None signifiers).
 
 **`instancepath`:** a JSNPath expression without any multiselect syntax. In any given JSON object, it identifies zero or one nodes. The last node's unique identifier (property name or array index) is the final step in `instancepath`.
 
@@ -75,7 +76,18 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
 ----
 ### Util
 
-`boolean **contains(** path, path **)**`
+`boolean **contains(** jsnpath, jsnpath **)**`
 
   Compares any two JSNPath expressions. Does NOT evaluate selection. Returns `true` if the first argument is equal to the second, or if the first argument begins with the second but is longer. Essentially, this is a descendant/ancestor checker.
+  
+`boolean **is_leafnode(** nodeval **)**`
+ 
+  Tests whether `nodeval` is a childless .
+  
+`boolean **is_instanceform(** jsnpath **)**`
+
+  Tests whether `jsnpath` is of instancepath form (i. e., free of JSN special multiselect syntax).
+  
+
+  
 
