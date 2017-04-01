@@ -140,8 +140,12 @@ jsnpath_regex = {
 
     'name_globbed_content': '([A-Za-z0-9*+]{1,2})|([A-Za-z0-9][A-Za-z0-9*+_]*[A-Za-z0-9*+])',
 
-    'index_literal_content': single_index_pattern,
-    'index_slicing_content': slice_pattern,
+    'index_literal_content':            single_index_pattern,
+    'index_slicing_content':            slice_pattern,
+    'name_wildcard_content':            '(("*")|(\'*\'))',
+    'identifier_step_wildcard':         '*',
+    'identifier_multistep_wildcard':    '**',
+
 }
 
 # The distinguished names for types of step in
@@ -152,11 +156,25 @@ step_types = {
         'description':  '''The step has quoted content, and contains
                             nothing but alphanumeric characters
                             (upper or lower case) and non-leading,
-                            non-trailing underscores.''',
+                            non-trailing underscore `_` characters.
+                            Repeated `_` characters are prohibited.''',
 
         'content_regex':    '(("' + jsnpath_regex['name_literal_content'] + '")'
                             + '|'
-                            + "('" + jsnpath_regex['name_literal_content'] + "'))"
+                            + "('" + jsnpath_regex['name_literal_content'] + "'))",
+
+        'examples':     {
+                            'good': (
+                                'a', 'ab_cd', 'A12knf', '3', 'altitude_max', '4567', 'AbleBaker',
+                            ),
+                            'bad': {
+                                'a__b'      : 'two consecutive `_` characters prohibited',
+                                '_svg_Elem' : 'leading `_` forbidden',
+                                'a_'        : 'trailing `_` forbidden',
+                                'abc*12rtf' : '`*` (glob wildcard) invalid in literal',
+                                '45:67'     : '`:` (slice operator for indexes) not valid in name',
+                            }
+                        }
     },
 
     'name_globbed':
@@ -167,7 +185,44 @@ step_types = {
 
         'content_regex':    '(("' + jsnpath_regex['name_globbed_content'] + '")'
                             + '|'
-                            + "('" + jsnpath_regex['name_globbed_content'] + "'))"
+                            + "('" + jsnpath_regex['name_globbed_content'] + "'))",
+
+        'examples':     {
+                            'good': (
+                                'a*', '*a', '*a*', 'ab*_cd', 'A12k*nf', '3*', 
+                                'alt*_max', '4*567', 'Able*Baker',
+                                'abc*12rtf', '*_*'
+
+                            ),
+                            'bad': {
+                                'abc_678'    : 'not a valid glob because no `*` present',
+                                'sh**art'    : 'two consecutive `*` characters prohibited',
+                                '_svg_Elem*' : 'leading `_` forbidden',
+                                'a*_'        : 'trailing `_` forbidden',
+                                '45:67*'     : '`:` (slice operator for indexes) not valid in name',
+                            }
+                        }
+    },
+
+    'name_wildcard':
+    {
+        'description':  '''A quoted single glob character `*` that is
+                            a match for ANY name, and therefore a
+                            selector for ALL children of the context
+                            JSON parent object.''',
+
+        'regex'
+
+        'examples':     {
+                            'good': (
+                                '"*"', "'*'",
+                            ),
+                            'bad': {
+                                '*'     : 'UNQUOTED `*` is a DIFFERENT KIND OF WILDCARD',
+                                '**'    : 'UNQUOTED `**` is a DIFFERENT KIND OF WILDCARD',
+                                '"**"'  : 'Not valid as anything at all',
+                            }
+                        }
     },
 
     'index_literal':
@@ -175,15 +230,44 @@ step_types = {
         'description':  '''The step has UNQUOTED content, and contains
                             nothing but numbers with optional leading 
                             minus sign `-`.
-                            (Note that negative indexing is done from the
+                            Note that negative indexing is done from the
                             end of the array, and is 1-based counting: 
-                            `array[-1]` is the last item in the array.''',
+                            `array[-1]` is the last item in the array.
+                            
+                            Example of positive and negative indexing:
+                            `['a', 'b', 'c', 'd', 'e', 'f', 'g']
+                               0    1    2    3    4    5    6
+                              -7   -6   -5   -4   -3   -2   -1
+                            ''',
 
-        'content-regex':    jsnpath_regex['index_literal_content']
+        'content-regex':    jsnpath_regex['index_literal_content'],
+
+        'examples':     {
+                            'good': (
+                                '0', '1450', '-3',
+                            ),
+                            'bad': {
+                                '-0':   'semantically meaningless',
+                                '3.5':  ''
+                            }
+                        }
     },
 
     'index_slice': 
     {
+        'description':  '''The step has UNQUOTED content, containing exactly
+                            one slice operator `:`. The slice operator is
+                            either preceded by a "startswith" number, followed
+                            by an "endsbefore" number, or both. The numbers
+                            may be positive or negative; a zero in the slice
+                            is without meaning but will not be considered an
+                            error.
+                            (Note that an attempt to apply slicing numbers that
+                            do not exist in the array of context will either
+                            terminate with an array out of bounds error, OR
+                            will fail silenly, depending on the `strict`
+                            parameter: `strict == True` will cause the error,
+                            and `strict == False` will cause the silent fail.)''',
 
     },
 

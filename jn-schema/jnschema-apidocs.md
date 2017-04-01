@@ -1,4 +1,4 @@
-## The JSNSchema API
+## The JNSchema API
 
 ### Notation and conventions
 
@@ -14,7 +14,7 @@ if **all** nodes found by selecting from a JSON object with `jsnpathexpr` are va
 
 When evaluating schema-validity for a JSON object, it's important to consider a couple of logical questions:
 
-  - what if a constraint's JSNPath expression finds no nodes?
+  - what if a constraint's JNPath expression finds no nodes?
   
   - what if the object contains paths that are not evaluated for constraint-validity?
   
@@ -22,9 +22,9 @@ The answer lies in the difference between **required** and **permitted** evaluat
 
 A schema may contain constraints that require the presence of certain nodes: if they are missing from a JSON object, the object is not schema-valid. A schema may also contain constraints that are permitted but not required. The absence of a permitted node **will not break** schema-compliance.
 
-However, the presence of any permitted constraint is _potentially_ a logical game-changer. It is possible, but not necessary, that a "permitted" constraint is intented simply to ensure the correct content of any node to which it applies, _if found_. However, it is also possible that a set of "permitted" constraints is intended to define the entire possible path/value space for a JSON object. In the latter case, for a JSON object to exhibit leafpaths that exceed the union of the "required" and "permitted" constraints' JSNPath expressions.
+However, the presence of any permitted constraint is _potentially_ a logical game-changer. It is possible, but not necessary, that a "permitted" constraint is intented simply to ensure the correct content of any node to which it applies, _if found_. However, it is also possible that a set of "permitted" constraints is intended to define the entire possible path/value space for a JSON object. In the latter case, for a JSON object to exhibit leafpaths that exceed the union of the "required" and "permitted" constraints' JNPath expressions.
 
-Accordingly another, analytical, capability of JSNSchema is to report **unconstrained paths**: Leaf paths in the JSON object that are not explicitly constrained by the schema. 
+Accordingly another, analytical, capability of JNSchema is to report **unconstrained paths**: Leaf paths in the JSON object that are not explicitly constrained by the schema. 
 
 For a JSON object to be schema-valid with respect to a schema, all constraints must evaluate as `true` for the schema. In form, a schema's constraints must all have a unique `jsnpathexpr`, with all `valueassert`s about nodes identified by that path being contained in the single constraint. (This isn't a logical necessity: it's just a means of forcing users to keep all of their per-`jsnpathexpr`-applicable constraints in one place.)
 

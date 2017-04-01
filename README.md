@@ -35,17 +35,17 @@ Yes, direct evaluation, as opposed to parsing, of unknown strings can be dangero
 
 To that end, **`json-declarative-tools` consists of the following parts:**
 
-  - **JSNPath**, a node selection notation;
+  - **JNPath**, a node selection notation;
  
-  - **JSNSchema**, a simple means of validating a JSON instance against a set of JSNPath expression/requirement pairs;
+  - **JNSchema**, a simple means of validating a JSON instance against a set of JNPath expression/requirement pairs;
  
-  - **JSNTemplate**, an extremely simple templating language that defines an **output composed of:**
+  - **JNTemplate**, an extremely simple templating language that defines an **output composed of:**
     - **nodes** drawn from an input JSON instance
     - simple **declarative expressions** that can access those nodes
     - **string literals** (HTML, Markdown, CSS, plain text etc)
     - **parameters** passed at runtime
     
-    JSNTemplate will be as simple and user-friendly as possible, providing affordances for aliasing JSNPath expressions using a simple notation.
+    JNTemplate will be as simple and user-friendly as possible, providing affordances for aliasing JNPath expressions using a simple notation.
 
 ### How does `json-declarative-tools` differ from the XML toolsets?
 
@@ -53,7 +53,7 @@ To that end, **`json-declarative-tools` consists of the following parts:**
 
   - **Restricted Capabilities.** Almost all of the XML tools suffered grievously from the academic compulsion to provide a sound and logically complete solution. Unfortunately, _the cost of getting to 100% is never linear._ That last 20% takes twice as long, and generates twice as many problems, as the first 80%.
 
-  So, JSNPath will not offer the stunning array of selectors and facets that XPath does. JSNSchema and JSNTemplate will restrict themselves to a modest and immediately useful set of goals.
+  So, JNPath will not offer the stunning array of selectors and facets that XPath does. JNSchema and JNTemplate will restrict themselves to a modest and immediately useful set of goals.
 
   - **Syntactic Clarity at all times.** To me, XML and the XML tools were quite reasonable. But I was one of those people who could sight-read XML Schema, so my view of the technologies was warped going in. I eventually found out that I was a useful but really rather unwelcome weirdo in a world full of people who got all kinds of strident butt-hurt when someone needed them to close a tag. So, the design constraint here is that `json-declarative-tools` is going to put a lot of work into being:
 

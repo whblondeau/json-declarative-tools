@@ -1,11 +1,11 @@
-## JSNPath
+## JNPath
 
 This specification tries to strike a helpful balance between the immense utility, power, and  apparently forbidding complexity of XPath on the one hand, and the familiarity of JSON notation on the other. The end result, of course, is neither as powerful as XPath nor as immediately familiar as Javascript's Object and Array syntax, or Python's corresponding Dictionary and List.
 
 ----
-### JSNPath is different from XPath
+### JNPath is different from XPath
 
-There is no way JSNPath is ever going to have the same analytical or expressive power as XPath. That's a feature, not a bug: as good as XPath is, it became pretty heavyweight. Capabilities, features, and syntax of JSNPath will be chosen based on the following criteria:
+There is no way JNPath is ever going to have the same analytical or expressive power as XPath. That's a feature, not a bug: as good as XPath is, it became pretty heavyweight. Capabilities, features, and syntax of JNPath will be chosen based on the following criteria:
 
   - Is this feature genuinely useful in real-world cases?
   
@@ -13,13 +13,13 @@ There is no way JSNPath is ever going to have the same analytical or expressive 
   
   - Is it possible to implement without `[**]['Hell']`?
 
-So no, your favoritest XPath thing ever isn't gonna get implemented. If JSNPath is a 70% or even 60% solution, and usable, it'll be a thumping success.
+So no, your favoritest XPath thing ever isn't gonna get implemented. If JNPath is a 70% or even 60% solution, and usable, it'll be a thumping success.
 
 Hopefully, it's at least big and dumb and obvious.
 
 ----
 
-### JSNPath Examples
+### JNPath Examples
 
 `['stores']['*parrot'][*]`                  get all child nodes of any child of the  
                                             "stores" top-level node, whose name ends
@@ -81,7 +81,7 @@ Hopefully, it's at least big and dumb and obvious.
 
 #### Things the examples show
 
-JSNPaths are composed of square-bracketed **steps**. Each step represents traversal down into the JSON object. Typically, this is a direct traversal to a child node. (The special descent shortcut expression `[**]` is the only exception to this.)
+JNPaths are composed of square-bracketed **steps**. Each step represents traversal down into the JSON object. Typically, this is a direct traversal to a child node. (The special descent shortcut expression `[**]` is the only exception to this.)
 
 **`namexpr` name expressions:**
 
@@ -99,9 +99,9 @@ When the square brackets contain a number, that's the index of the node in its p
 
 **Commas inside square brackets are boolean OR expressions:**
 
-`[indexpr, indexpr,...]` is syntactic sugar allowing multiple numeric index expressions so you don't have to write a lot of separate JSNPaths.
+`[indexpr, indexpr,...]` is syntactic sugar allowing multiple numeric index expressions so you don't have to write a lot of separate JNPaths.
 
-`[namexpr, namexpr,...]` is syntactic sugar allowing multiple name expressions so you don't have to write a lot of separate JSNPaths.
+`[namexpr, namexpr,...]` is syntactic sugar allowing multiple name expressions so you don't have to write a lot of separate JNPaths.
 
 **Wildcard node expressions**
 
@@ -131,7 +131,7 @@ When the square brackets contain a number, that's the index of the node in its p
 
 #### Return value "retexpr"
 
-JSNPath returns a very specific data structure for each node it finds. This is an array representing a 2-tuple:
+JNPath returns a very specific data structure for each node it finds. This is an array representing a 2-tuple:
 
 `[<explicit path>, <node value>]`
 
@@ -165,9 +165,9 @@ A path represents a traversal of
 
 
 
-JSNPath defines structural constraints on a JSON object. These constraints operates in two senses:
+JNPath defines structural constraints on a JSON object. These constraints operates in two senses:
 
-  - They can be evaluated with respect to a JSON instance to yield a boolean result of _conformance_, which is the basis of JSNSchema.
+  - They can be evaluated with respect to a JSON instance to yield a boolean result of _conformance_, which is the basis of JNSchema.
 
   - They can 
 
