@@ -35,7 +35,16 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
 **`container`:** a JSON value of object or array type; "container type" refers to those two types. The complementary term 
 **`non-container`** identifies all other JSON values (string, number, boolean, the various null/None signifiers).
 
-**`instancepath`:** a JNPath expression without any multiselect syntax. In any given JSON object, it identifies zero or one nodes. The last node's unique identifier (property name or array index) is the final step in `instancepath`.
+**`wildcard`:** a path step expression of the following types:
+  - **`[*]`**, the **general wildcard**, which matches any valid step.
+  - **`['*']`** or **`["*"]`**, the **namestep wildcard**, which matches any valid namestep, but no index step.
+  - **`[]`**, the **index wildcard**, which matches any valid index step, but no namestep.
+  
+**`multiselect`:** a path step expression that matches some, but not all, steps of the corresponding type:
+  - **`['`globexpr`']`** or **`["`globexpr`"]`**, the **glob step**, where globexpr is an otherwise valid namespace step containing one or more **`*`** characters. It matches any step according to the well-understood behavior of glob matching.
+  - **`[`startswith`:]`** or **`[:`endsbefore`]`** or **`[`startswith`:`endsbefore`]`**, the **slicing step**, which matches a range of index numbers according to slicing syntax.
+
+**`instancepath`:** a JNPath expression without any multiselect or node-conditional syntax. In any given JSON object, it identifies zero or one nodes. The last node's unique identifier (property name or array index) is the final step in `instancepath`.
 
 **`leafnode`:** a JSON node whose value is either:
 
