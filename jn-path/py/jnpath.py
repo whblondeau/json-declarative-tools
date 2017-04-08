@@ -2,17 +2,12 @@
 
 # This is the jsn_path object.
 
-def match_tupl(pattern, path):
-    '''both arguments are tuples'''
-    if len(path) < len(pattern):
-        # when the pattern has more steps than 
-        # the path, no way it works.
-        return False
-    subpath = path[:len(pattern)]
 
-    return (subpath == pattern)
+
+
 
 # --------------------------------------- FUNCTIONS
+
 
 def step_empty(stepcontent):
     return step == ''
@@ -77,7 +72,7 @@ def enumerate_leafpaths(current_node, current_pathstring='', current_steplist=[]
         yield leafpath
 
 
-def build_analysis_dicts(jsonobj):
+def build_json_pathdicts(jsonobj):
     '''accepts a compiled json object and 
     returns two logically equivalent dictionaries:
     one with string keys in JSNPath format, and
@@ -103,6 +98,41 @@ def build_analysis_dicts(jsonobj):
         tupldict[stepstuple] = noderep[0]
 
     return pathdict, tupldict
+
+
+# mainly a utility/debug function
+def is_consistent_pathpair(pathpair):
+    if not isinstance(pathpair, tuple):
+        return False
+    if len(pathpair) != 2:
+        return False
+    if not isinstance(pathpair[0], str):
+        return False
+    if not isinstance(pathpair[1], tuple):
+        return False
+
+    strcheck = tuple(pathpair[0][1:-1].split[']['])
+
+    return strcheck == pathpair[1]
+
+
+
+# --------------------------------------- API FUNCTIONS
+
+
+# def selects(pattern, path):
+#     '''Returns True if pattern selects path, otherwise False.
+#     pattern is a string or a tuple.
+#     path is either: 
+#         - a string path
+#         - a tuple path
+#         - a 2-tuple of paths in (string, tuple,) sequence.
+#     This function will determine a match, or failure to match,
+#     as efficiently as possible given the arguments.'''
+
+def matches(path, pattern)
+
+
 
 
 
