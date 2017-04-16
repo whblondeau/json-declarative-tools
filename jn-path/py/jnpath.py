@@ -130,7 +130,8 @@ def is_consistent_pathpair(pathpair):
 #     This function will determine a match, or failure to match,
 #     as efficiently as possible given the arguments.'''
 
-def matches(path, pattern)
+def matches(path, pattern):
+
 
 
 
@@ -158,6 +159,11 @@ slice_pattern += slice_stopbefore_pattern
 slice_pattern += '|'
 slice_pattern += slice_startwith_stopbefore_pattern
 
+name_literal_content = '([A-Za-z0-9]{1,2})|([A-Za-z0-9][A-Za-z0-9_]*[A-Za-z0-9])'
+singlequoted_literal_pattern = '("' + '")'
+
+namestep_discriminator = ()
+
 index_pattern =  wildcard_index_pattern
 index_pattern += '|'
 index_pattern += '(' + '\[(' + single_index_pattern
@@ -181,6 +187,29 @@ jsnpath_regex = {
 # The distinguished names for types of step in
 # a JSNPath expression
 step_types = {
+
+    'step-wildcard':
+    {
+        'description':  ''' A single unquoted `*`. This matches any step, 
+                                whether named or indexed.
+                            ''',
+
+        'content-regex':    jnpath_regex['identifier_step_wildcard'],
+
+        'examples':     {
+                            'good': (
+                                '*',
+                            ),
+                            'bad': {
+                                '**'    :   'DIFFERENT KIND OF WILDCARD',
+                                '"*"'   :   '''Named wildcard. Fails to match
+                                                indexed steps.'''
+                            }
+                        }
+    },
+
+
+
     'name_literal':
     {
         'description':  '''The step has quoted content, and contains
@@ -268,6 +297,9 @@ step_types = {
                             `['a', 'b', 'c', 'd', 'e', 'f', 'g']
                                0    1    2    3    4    5    6
                               -7   -6   -5   -4   -3   -2   -1
+
+                            In this example, 'c' is identified as [2] or
+                            as [-5]
                             ''',
 
         'content-regex':    jsnpath_regex['index_literal_content'],
@@ -283,21 +315,35 @@ step_types = {
                         }
     },
 
+     # (Note that an attempt to apply slicing numbers that
+        # do not exist in the array of context will either
+        # terminate with an array out of bounds error, OR
+        # will fail silenly, depending on the `strict`
+        # parameter: `strict == True` will cause the error,
+        # and `strict == False` will cause the silent fail.)
+
     'index_slice': 
     {
         'description':  '''The step has UNQUOTED content, containing exactly
                             one slice operator `:`. The slice operator is
-                            either preceded by a "startswith" number, followed
+                            either preceded by a "startwith" number, followed
                             by an "endsbefore" number, or both. The numbers
                             may be positive or negative; a zero in the slice
                             is without meaning but will not be considered an
                             error.
-                            (Note that an attempt to apply slicing numbers that
-                            do not exist in the array of context will either
-                            terminate with an array out of bounds error, OR
-                            will fail silenly, depending on the `strict`
-                            parameter: `strict == True` will cause the error,
-                            and `strict == False` will cause the silent fail.)''',
+                           ''',
+
+        'content-regex':    jsnpath_regex['index_slicing_content'],
+
+        'examples':     {
+                            'good': (
+                                '0', '1450', '-3',
+                            ),
+                            'bad': {
+                                '-0':   'semantically meaningless',
+                                '3.5':  ''
+                            }
+                        }
 
     },
 
@@ -325,14 +371,27 @@ step_types = {
 
 }
 
+def is_named(step):
+    return ((step.startswith('"') and step.endswith('"'))
+        or(step.startswith("'") and step.endswith("'")))
 
+def matches
 
 
 # This dictionary maps non-literal steps in a JSNPath
 # expression to the corresponding
 # stepwise matching logic.
-# Each key is a generic step type
+# Each key is a generic step type. 
 match_dict = {
+
+    'singlestep_wildcard'   : lambda step: True,    # always matches any step
+    'multistep_wildcard'    : lambda step: False,   # never matches any step: it's a search pattern
+    'name_wildcard'         : lambda step: is_named(step),
+    'index_wildcard'        : lambda step: not is_named(step),
+    'name_literal'          : lambda step, pattern: step == pattern,
+    'index_literal'         : lambda step, pattern: step == pattern,
+    'name_globbed'
+
     
 }
 
