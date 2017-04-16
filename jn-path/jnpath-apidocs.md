@@ -32,6 +32,38 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
 
 #### Terminology
 
+##### JSON data types in JNPath
+
+**`array`:** an ordered container whose contents are identified by position (JavaScript `array`, Python `list`)
+
+**`map`:** an unordered container whose contents are identified by `string name` (Javascript `object`, Python `dict`, Perl `hash`, Java `map`; chose "map" because it's short and generic. JSON's official term "object" in particular is far too generic, which is probably a tribute to JavaScript's simple object model.)
+
+**`container`:** the superset of `array` and `map`. Containers may contain child instances. In contrast, the following **`value`** types are incapable of holding additional structural elements in JSON:
+
+  - `string`: always unicode. Typically encoded in UTF-8. Note that, in Python 2, "string" refers to a byte sequence in ASCII encoding. Python 2 uses the `unicode` type to refer to unicode character sequences; conversion between these two string types is awkward and frequently misunderstood. That's why Python 3 switched to "string" meaning a sequence of unicode characters; and that's why the JNPath reference implementation is in Python 3.
+
+  - `number`: a float or integer. Note that many numeric types are typically represented as formatted strings in JSON. Date and Time are good examples of this.
+
+  - `boolean`: in documentation we use capitalized `True` and `False` for the two boolean values, per the Python convention. (This is mainly for salience: `true` and `false` still seem more natural and are the literals in a serialized JSON object. But they are also useful words in natural language.)
+
+  - `null`: any of the various "not a value" usages that various languages support. (Python `None`, Javascript and Java `null`, etc.)
+
+
+**`leaf value`:** either an **empty** container, or a non-container data element:
+
+
+**`step`:** a single JNPath element.
+
+
+
+**`node`:** a 2-tuple of a `step` and a `value`.
+
+**`stepsequence`:** a sequence of 0 to n `step` elements.
+
+**`path`:** a stepsequence considered in the context of an actual or hypothetical JSON object.
+
+**`leaf`:** 
+
 **`container`:** a JSON value of object or array type; "container type" refers to those two types. The complementary term 
 **`non-container`** identifies all other JSON values (string, number, boolean, the various null/None signifiers).
 
@@ -75,10 +107,8 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
 
   This function computes and returns all extant leafpaths in `jsonobject`, returning them and their values.
 
-----
-`set(noderep) select_nodes( selectorpath, jsonobject )`
 
-  This function returns all leafpaths in `jsonobject` for which `selects( selectorpath, leafpath )` == `true`.
+
 
 
 ----
@@ -88,14 +118,22 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
 `boolean contains( jnpath, jnpath )`
 
   Compares any two JNPath expressions. Does NOT evaluate selection. Returns `true` if the first argument is equal to the second, or if the first argument begins with the second but is longer. Essentially, this is a descendant/ancestor checker.
+
   
 `boolean is_leafnode( nodeval )`
  
-  Tests whether `nodeval` is a childless .
+  Tests whether `nodeval` is childless : either an empty .
+
   
 `boolean is_instanceform( jnpath )`
 
   Tests whether `jnpath` is of instancepath form (i. e., free of JN special multiselect or node-conditional syntax).
+
+
+`set(step) steps( level, path )`
+
+  `level` is either an integer or a slicing expression. This function returns
+  all steps in the path that match the level expression, or None if there are no matching paths. (NB this never throws index out of bounds exceptions.)
   
 
   
