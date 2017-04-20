@@ -12,6 +12,9 @@ Given an arbitrary set of leafpaths, resolution to a set is performed as follows
 
     2. Step names or indexes are resolved by a breadth logic: 
 
+        `for index in longest path:
+            step = set of all paths[index]
+
     2. If the first steps in all of the paths are named, they will be considered to be children of an anonymous `{}` root node.
 
     3. If the first steps in all of the paths are indexed, they will be considered to be children of an anonymous `[]` root node. They will be reindexed as necessary
