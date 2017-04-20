@@ -120,9 +120,9 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
   Compares any two JNPath expressions. Does NOT evaluate selection. Returns `true` if the first argument is equal to the second, or if the first argument begins with the second but is longer. Essentially, this is a descendant/ancestor checker.
 
   
-`boolean is_leafnode( nodeval )`
+`boolean is_leafvalue( nodeval )`
  
-  Tests whether `nodeval` is childless : either an empty .
+  Tests whether `nodeval` is childless : either an empty container or a non-container JSON type.
 
   
 `boolean is_instanceform( jnpath )`
@@ -130,10 +130,12 @@ which returns a `boolean`, is equivalent to the natural language assertion "`sel
   Tests whether `jnpath` is of instancepath form (i. e., free of JN special multiselect or node-conditional syntax).
 
 
-`set(step) steps( level, path )`
+`step[] select_steps( level, jnpath )`
 
-  `level` is either an integer or a slicing expression. This function returns
-  all steps in the path that match the level expression, or None if there are no matching paths. (NB this never throws index out of bounds exceptions.)
+  `level` is either an integer or a slicing expression: it therefore identifies either a single step or a contiguous sequence of steps. This function returns
+  all steps in the path that match the level expression -- with order preserved -- or None if there are no matching paths. 
+
+  This never throws index out of bounds exceptions.
   
 
   

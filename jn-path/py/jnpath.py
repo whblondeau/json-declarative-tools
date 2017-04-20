@@ -299,7 +299,7 @@ step_types = {
                               -7   -6   -5   -4   -3   -2   -1
 
                             In this example, 'c' is identified as [2] or
-                            as [-5]
+                            as [-5].
                             ''',
 
         'content-regex':    jsnpath_regex['index_literal_content'],
@@ -371,11 +371,12 @@ step_types = {
 
 }
 
-def is_named(step):
-    return ((step.startswith('"') and step.endswith('"'))
-        or(step.startswith("'") and step.endswith("'")))
+def is_named(stepcontent):
+    return ((stepcontent.startswith('"') and stepcontent.endswith('"'))
+        or(stepcontent.startswith("'") and stepcontent.endswith("'")))
 
-def matches
+# needs regex...
+def globmatches(globpattern, stepcontent):
 
 
 # This dictionary maps non-literal steps in a JSNPath
@@ -384,12 +385,12 @@ def matches
 # Each key is a generic step type. 
 match_dict = {
 
-    'singlestep_wildcard'   : lambda step: True,    # always matches any step
-    'multistep_wildcard'    : lambda step: False,   # never matches any step: it's a search pattern
-    'name_wildcard'         : lambda step: is_named(step),
-    'index_wildcard'        : lambda step: not is_named(step),
-    'name_literal'          : lambda step, pattern: step == pattern,
-    'index_literal'         : lambda step, pattern: step == pattern,
+    'singlestep_wildcard'   : lambda stepcontent: True,    # always matches any step
+    'multistep_wildcard'    : lambda stepcontent: False,   # never matches any step: it's a search pattern
+    'name_wildcard'         : lambda stepcontent: is_named(stepcontent),
+    'index_wildcard'        : lambda stepcontent: not is_named(stepcontent),
+    'name_literal'          : lambda stepcontent, pattern: stepcontent == pattern,
+    'index_literal'         : lambda stepcontent, pattern: stepcontent == pattern,
     'name_globbed'
 
     
