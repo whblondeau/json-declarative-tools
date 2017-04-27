@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# This is the jsn_path object.
+# This is the jn_path object.
 
 
 
@@ -32,7 +32,7 @@ def enumerate_leafpaths(current_node, current_pathstring='', current_steplist=[]
     The 3-tuple is of the form (pathstring, steplist, leafnode).
     Note that pathstring and steplist are logically equivalent. This method
     provides both because they afford different conveniences for
-    the various JSNPath evaluation techniques that will operate on these
+    the various JNPath evaluation techniques that will operate on these
     leafpaths.
     Note that this is '''
 
@@ -75,7 +75,7 @@ def enumerate_leafpaths(current_node, current_pathstring='', current_steplist=[]
 def build_json_pathdicts(jsonobj):
     '''accepts a compiled json object and 
     returns two logically equivalent dictionaries:
-    one with string keys in JSNPath format, and
+    one with string keys in JNPath format, and
     one with tuple(string) keys representing the 
     same path information. Values are the leaf
     node values.
@@ -131,6 +131,7 @@ def is_consistent_pathpair(pathpair):
 #     as efficiently as possible given the arguments.'''
 
 def matches(path, pattern):
+    return False
 
 
 
@@ -141,7 +142,7 @@ def matches(path, pattern):
 # --------------------------------------- CONSTANTS
 
 # BUILDING BLOCKS: regexes or regex fragments that are useful
-# in their own right but mostly serve to populate `jsnpath_regexes`
+# in their own right but mostly serve to populate `jnpath_regexes`
 
 wildcard_index_pattern = '(' + '\[\]' + ')'
 
@@ -159,8 +160,10 @@ slice_pattern += slice_stopbefore_pattern
 slice_pattern += '|'
 slice_pattern += slice_startwith_stopbefore_pattern
 
+name_literal_chars = '[A-Za-z0-9_]*'
+
 name_literal_content = '([A-Za-z0-9]{1,2})|([A-Za-z0-9][A-Za-z0-9_]*[A-Za-z0-9])'
-singlequoted_literal_pattern = '("' + '")'
+singlequoted_literal_pattern = '("' + name_literal_content + '")'
 
 namestep_discriminator = ()
 
@@ -171,7 +174,7 @@ index_pattern += '|'
 index_pattern += slice_pattern + ')\]' + ')'
 
 # more API-oriented exposure of specific regexes
-jsnpath_regex = {
+jnpath_regex = {
     'name_literal_content': '([A-Za-z0-9]{1,2})|([A-Za-z0-9][A-Za-z0-9_]*[A-Za-z0-9])',
 
     'name_globbed_content': '([A-Za-z0-9*+]{1,2})|([A-Za-z0-9][A-Za-z0-9*+_]*[A-Za-z0-9*+])',
@@ -185,7 +188,7 @@ jsnpath_regex = {
 }
 
 # The distinguished names for types of step in
-# a JSNPath expression
+# a JNPath expression
 step_types = {
 
     'step-wildcard':
@@ -218,9 +221,9 @@ step_types = {
                             non-trailing underscore `_` characters.
                             Repeated `_` characters are prohibited.''',
 
-        'content_regex':    '(("' + jsnpath_regex['name_literal_content'] + '")'
+        'content_regex':    '(("' + jnpath_regex['name_literal_content'] + '")'
                             + '|'
-                            + "('" + jsnpath_regex['name_literal_content'] + "'))",
+                            + "('" + jnpath_regex['name_literal_content'] + "'))",
 
         'examples':     {
                             'good': (
@@ -242,9 +245,9 @@ step_types = {
                             glob symbol, which is a subsitition notiation
                             for 0-n characters.''',
 
-        'content_regex':    '(("' + jsnpath_regex['name_globbed_content'] + '")'
+        'content_regex':    '(("' + jnpath_regex['name_globbed_content'] + '")'
                             + '|'
-                            + "('" + jsnpath_regex['name_globbed_content'] + "'))",
+                            + "('" + jnpath_regex['name_globbed_content'] + "'))",
 
         'examples':     {
                             'good': (
@@ -302,7 +305,7 @@ step_types = {
                             as [-5].
                             ''',
 
-        'content-regex':    jsnpath_regex['index_literal_content'],
+        'content-regex':    jnpath_regex['index_literal_content'],
 
         'examples':     {
                             'good': (
@@ -327,21 +330,27 @@ step_types = {
         'description':  '''The step has UNQUOTED content, containing exactly
                             one slice operator `:`. The slice operator is
                             either preceded by a "startwith" number, followed
-                            by an "endsbefore" number, or both. The numbers
+                            by an "endbefore" number, or both. The numbers
                             may be positive or negative; a zero in the slice
                             is without meaning but will not be considered an
                             error.
                            ''',
 
-        'content-regex':    jsnpath_regex['index_slicing_content'],
+        'content-regex':    jnpath_regex['index_slicing_content'],
 
         'examples':     {
                             'good': (
-                                '0', '1450', '-3',
+                                '0:4',
+                                '1312:1450',
+                                '2:-3',
                             ),
                             'bad': {
-                                '-0':   'semantically meaningless',
-                                '3.5':  ''
+                                '2:-0':   '`-0` is a bad index',
+                                '3.5: 7':  '`3.5` is a bad index',
+                                '4:2':     '''Out of order. Slice needs to be 
+                                            [earlier:later]. This will not cause
+                                            an error; it will fail validation;
+                                            it can never identify any indexes.'''
                             }
                         }
 
@@ -349,10 +358,11 @@ step_types = {
 
     'index_wildcard':
     {  
-        'description':  '''The step represents ANY index (numeric) literal, and is
+        'description':  '''An unquoted step `[]`. The step represents ANY
+                            index (numeric) literal, and is
                             therefore a selector for ALL children of the 
                             parent array. The step is an empty pair of
-                            brackets, `[]`, and the content is therefore
+                            brackets; the content is therefore
                             the empty string. (Note that the content_regex
                             does not work when using multiline mode; but
                             this is a degenerate case anyway. Step content
@@ -366,8 +376,12 @@ step_types = {
 
     'index':
     {
+        'description':  '''Either an `index_literal`, an `index_wildcard`, or
+                            an `index_slice`.''',
 
-    }
+        'content_regex':    '^$',
+
+        'content_eval': step_empty,    }
 
 }
 
@@ -375,11 +389,19 @@ def is_named(stepcontent):
     return ((stepcontent.startswith('"') and stepcontent.endswith('"'))
         or(stepcontent.startswith("'") and stepcontent.endswith("'")))
 
-# needs regex...
+
 def globmatches(globpattern, stepcontent):
+    '''This function does not validate its arguments.
+    It just checks to see whether the globpattern, with an arbitrary
+    number of named step characters substituting for any occurrence
+    of '*', can match the stepcontent.
+    '''
+    # need a trailing '$' to prevent partial matches
+    regex = globpattern.replace('*', name_literal_chars) + '$'
+    return re.match(regex, stepcontent)
 
 
-# This dictionary maps non-literal steps in a JSNPath
+# This dictionary maps non-literal steps in a JNPath
 # expression to the corresponding
 # stepwise matching logic.
 # Each key is a generic step type. 
@@ -391,9 +413,8 @@ match_dict = {
     'index_wildcard'        : lambda stepcontent: not is_named(stepcontent),
     'name_literal'          : lambda stepcontent, pattern: stepcontent == pattern,
     'index_literal'         : lambda stepcontent, pattern: stepcontent == pattern,
-    'name_globbed'
+    'name_globbed'          : lambda stepcontent, pattern: globmatches(pattern, stepcontent),
 
-    
 }
 
 # --------------------------------------- EXECUTE
